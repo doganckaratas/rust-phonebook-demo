@@ -21,18 +21,9 @@ fn main() {
 	println!("{}", Blue.bold().paint("Phonebook"));
 	let mut book: &mut Vec<Record> = &mut Vec::new();
 
-	/*
-	let bob: Record = Record { name: String::from("Bob"), surname: String::from("Yannes"), home_number: String::from("123123"), work_number: String::from("232452"), address: String::from("address") };
-	book.push(bob);
-	
-	for f in book.iter() {
-		println!("{} {} {} {} {}", f.name, f.surname, f.home_number, f.work_number, f.address);
-	}
-	*/
-
 	loop {
 		match menu() {
-			1 => view(),
+			1 => view(book),
 			2 => search(),
 			3 => add(book),
 			4 => update(),
@@ -40,10 +31,6 @@ fn main() {
 			6 => exit(),
 			_ => error(),
 		}
-
-	for f in book.iter() {
-		println!("{} {} {} {} {}", f.name, f.surname, f.home_number, f.work_number, f.address);
-	}
 	}
 }
 
@@ -65,8 +52,13 @@ fn menu() -> i32 {
 	choice
 }
 
-fn view() {
+fn view(book: &mut Vec<Record>) {
 	println!("{}", Green.bold().paint("==View records=="));
+
+	println!("List of all contacts:");
+	for (i, f) in book.iter().enumerate() {
+		println!("id: {} name: {} surname: {} home number: {} work number: {} address: {}", i, f.name, f.surname, f.home_number, f.work_number, f.address);
+	}
 }
 
 fn search() {
