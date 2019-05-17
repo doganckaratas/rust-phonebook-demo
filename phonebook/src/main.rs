@@ -1,4 +1,4 @@
-/* 
+/*
 * Ege University ICI Programming Languages Project
 * Phonebook - 1.0
 * Dogan C. Karatas
@@ -9,28 +9,56 @@ use std::io;
 use ansi_term::Colour::*;
 use std::process;
 
+struct Record {
+	name: String,
+	surname: String,
+	home_number: String,
+	work_number: String,
+	address: String,
+}
+
 fn main() {
 	println!("{}", Blue.bold().paint("Phonebook"));
-	match menu() {
-		1 => view(),
-		2 => search(),
-		3 => add(),
-		4 => update(),
-		5 => delete(),
-		6 => exit(),
-		_ => error(),
+	let mut book: &mut Vec<Record> = &mut Vec::new();
+
+	/*
+	let bob: Record = Record { name: String::from("Bob"), surname: String::from("Yannes"), home_number: String::from("123123"), work_number: String::from("232452"), address: String::from("address") };
+	book.push(bob);
+	
+	for f in book.iter() {
+		println!("{} {} {} {} {}", f.name, f.surname, f.home_number, f.work_number, f.address);
+	}
+	*/
+
+	loop {
+		match menu() {
+			1 => view(),
+			2 => search(),
+			3 => add(book),
+			4 => update(),
+			5 => delete(),
+			6 => exit(),
+			_ => error(),
+		}
+
+	for f in book.iter() {
+		println!("{} {} {} {} {}", f.name, f.surname, f.home_number, f.work_number, f.address);
+	}
 	}
 }
 
+fn read() -> String {
+	let stdin = io::stdin();
+	let input = &mut String::new();
+	input.clear();
+	stdin.read_line(input).expect("Couldn't read from std::io::stdin()");
+	input.trim().to_string()
+}
 
 fn menu() -> i32 {
 	println!("1: View\n2: Search\n3: Add\n4: Update\n5: Delete\n6: Exit");
-	
-	let stdin = io::stdin();
-	let input_buffer = &mut String::new();
-	input_buffer.clear();
-	stdin.read_line(input_buffer).expect("Couldn't read from std::io::stdin()");
-	let choice: i32 = input_buffer.trim().parse().expect("Enter correct choice.");
+	let input = read();
+	let choice: i32 = input.trim().parse().expect("Enter correct choice.");
 	if choice > 6 || choice < 1 {
 		println!("Error, unable to decide choice number. Please retry.");
 	}
@@ -45,8 +73,22 @@ fn search() {
 	println!("{}", Green.bold().paint("==Search record=="));
 }
 
-fn add() {
+fn add(book: &mut Vec<Record>) {
 	println!("{}", Green.bold().paint("==Add record=="));
+	println!("Enter name: ");
+	let name = read();
+	println!("Enter surname: ");
+	let surname = read();
+	println!("Enter home number: ");
+	let home_number = read();
+	println!("Enter work number: ");
+	let work_number = read();
+	println!("Enter address: ");
+	let address = read();
+	
+	let person = Record {name: name, surname: surname, home_number: home_number, work_number: work_number, address: address};
+	book.push(person);
+	println!("Person saved into phonebook.");
 }
 
 fn update() {
