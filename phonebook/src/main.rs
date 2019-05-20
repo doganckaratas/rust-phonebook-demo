@@ -24,7 +24,7 @@ fn main() {
 	loop {
 		match menu() {
 			1 => view(book),
-			2 => search(),
+			2 => search(book),
 			3 => add(book),
 			4 => update(),
 			5 => delete(),
@@ -61,8 +61,37 @@ fn view(book: &mut Vec<Record>) {
 	}
 }
 
-fn search() {
+fn search(book: &mut Vec<Record>) {
 	println!("{}", Green.bold().paint("==Search record=="));
+	println!("Search using (1) Phone number or (2) Name?");
+	let person: Record;
+	let mut input = read();
+	let choice: i32 = input.trim().parse().expect("Enter correct choice");
+
+	match choice {
+		1 => {
+			println!("Enter Home or Work number: ");
+			input = read();
+			for (i, f) in book.iter().enumerate() {
+				if f.home_number == input || f.work_number == input {
+					println!("id: {} name: {} surname: {} home number: {} work number: {} address: {}", i, f.name, f.surname, f.home_number, f.work_number, f.address);
+				}
+			}
+		}
+
+		2 => {
+			println!("Enter Name: ");
+			input = read();
+			for (i, f) in book.iter().enumerate() {
+				if f.name == input {
+					println!("id: {} name: {} surname: {} home number: {} work number: {} address: {}", i, f.name, f.surname, f.home_number, f.work_number, f.address);
+				}
+			}
+		}
+		_ => {
+			println!("Enter correct choice.");
+		}
+	}
 }
 
 fn add(book: &mut Vec<Record>) {
