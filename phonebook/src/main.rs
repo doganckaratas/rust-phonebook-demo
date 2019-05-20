@@ -1,6 +1,6 @@
 /*
 * Ege University ICI Programming Languages Project
-* Phonebook - 1.0
+* Rust based Phonebook - 1.0
 * Dogan C. Karatas
 * May 2019 - GNU GPL v3 Licensed..
 */
@@ -19,16 +19,15 @@ struct Record {
 
 fn main() {
 	println!("{}", Blue.bold().paint("Phonebook"));
-	let mut book: &mut Vec<Record> = &mut Vec::new();
+	let book: &mut Vec<Record> = &mut Vec::new();
 
 	loop {
 		match menu() {
 			1 => view(book),
 			2 => search(book),
 			3 => add(book),
-			4 => update(),
-			5 => delete(),
-			6 => exit(),
+			4 => delete(book),
+			5 => exit(),
 			_ => error(),
 		}
 	}
@@ -43,7 +42,7 @@ fn read() -> String {
 }
 
 fn menu() -> i32 {
-	println!("1: View\n2: Search\n3: Add\n4: Update\n5: Delete\n6: Exit");
+	println!("1: View\n2: Search\n3: Add\n4: Delete\n5: Exit");
 	let input = read();
 	let choice: i32 = input.trim().parse().expect("Enter correct choice.");
 	if choice > 6 || choice < 1 {
@@ -64,7 +63,6 @@ fn view(book: &mut Vec<Record>) {
 fn search(book: &mut Vec<Record>) {
 	println!("{}", Green.bold().paint("==Search record=="));
 	println!("Search using (1) Phone number or (2) Name?");
-	let person: Record;
 	let mut input = read();
 	let choice: i32 = input.trim().parse().expect("Enter correct choice");
 
@@ -112,12 +110,23 @@ fn add(book: &mut Vec<Record>) {
 	println!("Person saved into phonebook.");
 }
 
-fn update() {
-	println!("{}", Green.bold().paint("==Update record=="));
-}
-
-fn delete() {
+fn delete(book: &mut Vec<Record>) {
 	println!("{}", Green.bold().paint("==Delete record=="));
+	println!("Enter Home or Work number: ");
+	let input = read();
+	let mut delete_list: Vec<usize> = [].to_vec();
+	for (i, f) in book.iter().enumerate() {
+		if f.home_number == input || f.work_number == input {
+			println!("Match found: ");
+			println!("id: {} name: {} surname: {} home number: {} work number: {} address: {}", i, f.name, f.surname, f.home_number, f.work_number, f.address);
+			println!("Deleting entry...");
+			delete_list.push(i);
+		}
+	}
+
+	for i in delete_list {
+		book.remove(i);
+	}
 }
 
 fn exit() {
